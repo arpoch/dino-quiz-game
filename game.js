@@ -2,6 +2,12 @@ const SpeechRecog = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (!SpeechRecog) {
   alert("Not Supported");
 }
+//Sound
+let soundEffect = {
+  hit: new Audio("sounds/hit.mp3"),
+  score: new Audio("sounds/score.mp3"),
+};
+
 //QUES-ANSW
 function questions() {
   ques = [
@@ -41,8 +47,7 @@ let answerMatchresult = {
 let quizQuestionAnswer = {
   index: -1,
   question: questions(),
-  flag: false,
-  board: document.getElementById("question"),
+  board: document.getElementById("question"), //questions to be displayed
   set setQuestion(question) {
     this.index++;
     if (this.index >= this.question.length) {
@@ -74,34 +79,7 @@ let quizQuestionAnswer = {
   },
 };
 
-//INITAL
-let dinoPositon = {
-  onground: true,
-  set setDinoPosition(flag) {
-    this.onground = flag;
-  },
-  get getDinoPosition() {
-    return this.onground;
-  },
-};
-let gameStatus = {
-  gameOver: false,
-  gameReset: false,
-  set setGameOver(flag) {
-    this.gameOver = flag;
-  },
-  set setResetGame(flag) {
-    this.gameOver = flag;
-  },
-  get getGameOver() {
-    return this.gameOver;
-  },
-  get getResetGame() {
-    return this.gameOver;
-  },
-};
-
-///SCORE
+//SCORE
 let currentScore = 0,
   highScore = 0;
 let scoreBoard = {
@@ -117,6 +95,9 @@ let scoreBoard = {
   set setScore(currentScore) {
     this.currentScore = currentScore;
     this.score.textContent = "00" + this.currentScore.toString();
+    if (this.currentScore % 300 === 0) {
+      soundEffect.score.play();
+    }
   },
   set hideScoreBoard(flag) {
     if (flag) {
@@ -128,6 +109,7 @@ let scoreBoard = {
 };
 
 //Player
+////Draw
 function drawDino(sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
   const dinoCanvas = document.getElementsByClassName("dino")[0];
   if (!dinoCanvas.getContext) {
@@ -142,11 +124,12 @@ function drawDino(sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
     dino.drawImage(dinoImage, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
   });
 }
+////Jump
 function jumpDino() {
   const dinoCanvas = document.getElementById("dinoDiv");
   drawDino(1675, 0, 200, 200, 0, 0, 100, 100);
   let initialDist = 150;
-  dinoPositon.setDinoPosition = false;
+  dinoPositon.setDinoPosition = false; //not on ground
   let jumpTime = setInterval(() => {
     //console.log("Jumping UP");
     if (initialDist == 100) {
@@ -169,6 +152,7 @@ function jumpDino() {
   console.log("Done Jumping");
   return true;
 }
+////Run
 function dinoRun() {
   console.log("OnGround " + dinoPositon.onground);
   let newCoord = 90,
@@ -184,7 +168,36 @@ function dinoRun() {
     }
   }, 100);
 }
+////Postion flag
+let dinoPositon = {
+  onground: true,
+  set setDinoPosition(flag) {
+    this.onground = flag;
+  },
+  get getDinoPosition() {
+    return this.onground;
+  },
+};
+
 //GAME EVENTS
+////Status
+let gameStatus = {
+  gameOver: false,
+  gameReset: false,
+  set setGameOver(flag) {
+    this.gameOver = flag;
+  },
+  set setResetGame(flag) {
+    this.gameOver = flag;
+  },
+  get getGameOver() {
+    return this.gameOver;
+  },
+  get getResetGame() {
+    return this.gameOver;
+  },
+};
+////Text
 function initialText() {
   const groundDiv = document.getElementById("game");
   let text = document.createElement("p");
@@ -200,6 +213,7 @@ function initialText() {
   }
   groundDiv.appendChild(text);
 }
+////Entry Point
 function initGame() {
   initialText();
   if (!gameStatus.getResetGame) {
@@ -228,6 +242,7 @@ function initGame() {
     }
   });
 }
+/////Reload
 const gameReloadEvent = new Event("reloadGame");
 document.addEventListener("reloadGame", function () {
   console.log("Reload");
@@ -238,7 +253,7 @@ document.addEventListener("reloadGame", function () {
   // quizQuestionAnswer.indexReset = true;
   // answerMatchresult.setflagVal = false;
 });
-
+/////Start
 function startGame() {
   quizQuestionAnswer.setQuestion = questions();
   scoreBoard.hideScoreBoard = false;
@@ -247,7 +262,7 @@ function startGame() {
   //drawDino(1675, 0, 200, 200, 0, 0, 100, 100);
   groundMove();
 }
-
+////Over
 function gameOver() {
   const textStatus = document.getElementById("gameOver");
   const iconStatus = document.getElementById("reloadIcon");
@@ -257,11 +272,14 @@ function gameOver() {
   let image = new Image();
   image.src = "images/dino.png";
   drawDino(2120, 0, 200, 200, 0, 0, 100, 100);
+  soundEffect.hit.play(); //play hit sound
   gameOvertext.drawImage(image, 1295, 25, 385, 200, 0, 5, 150, 150);
   gameOverIcon.drawImage(image, 0, 0, 200, 200, 0, 0, 100, 100);
   correctAns.innerText = "Correct Answer: " + quizQuestionAnswer.getAnswer;
+  sp.stop(); //stop speech recognition
   document.dispatchEvent(gameReloadEvent);
 }
+
 //OBSTACLE
 let obctacleSpeed = 2;
 function Cactus(cactusPosition) {
@@ -310,7 +328,7 @@ function Cactus(cactusPosition) {
     }
     if (cactusPosition <= 0) {
       console.log("Reset setFlag");
-      answerMatchresult.setflagVal = false;
+      answerMatchresult.setflagVal = false; //Correct Answer, Reset for next question
       cactusElement.remove();
       clearInterval(time);
     } else {
@@ -320,15 +338,18 @@ function Cactus(cactusPosition) {
   }, obctacleSpeed);
   return 0;
 }
+////When to jump
 function tojump(cactusPosition) {
   //console.log("CactusP= " + cactusPosition);
   const dinoPositon = document.getElementsByClassName("dino")[0];
   //height
   //console.log(fun + " " + cactusPosition);
   if (dinoPositon.width - cactusPosition * 1.5 >= -45) {
+    //distnace between the obstalce(cactus) and player have reached a specified number
     return true;
   } else return false;
 }
+
 //BACKGROUND
 function groundMove() {
   const groundDiv = document.getElementById("Dinoground");
@@ -337,7 +358,7 @@ function groundMove() {
   groundDiv.appendChild(ground);
   let groundCanvas = ground.getContext("2d");
   let groundImage = new Image();
-  groundImage.src = "images/dino.png";
+  groundImage.src = "images/ground.png";
   let canvasWidth = positionInfo.width,
     canvasHeight = positionInfo.height,
     scrollVal = 0,
@@ -355,19 +376,18 @@ function groundMove() {
       }
       scrollVal += speed;
       // To go the other way instead
-      //The Image will change according to the width of DIV [TODO]
       groundCanvas.drawImage(
         groundImage,
-        -scrollVal,
+        -scrollVal, //It is minus because we have to go left to right ``canvasWidth + (canvasWidth * 5) / 100
         -100,
-        canvasWidth + (canvasWidth * 5) / 100,
+        canvasWidth + 0.5,
         130
       );
       groundCanvas.drawImage(
         groundImage,
         canvasWidth - scrollVal,
         -100,
-        canvasWidth + (canvasWidth * 5) / 100,
+        canvasWidth,
         130
       );
       let groundTimeOut = setTimeout(function () {
@@ -382,9 +402,8 @@ function groundMove() {
 }
 
 //__WSA__
-
+let sp = new SpeechRecog();
 function Speech() {
-  let sp = new SpeechRecog();
   sp.lang = "en-US";
   sp.continuous = false;
   sp.start();
@@ -397,7 +416,7 @@ function Speech() {
   });
 }
 function speechStart() {
-  console.log("Start WEB Speech API");
+  console.log("WEB Speech API Started");
 }
 function speechResult(event) {
   let x = event.results[0][0].transcript.toUpperCase().trim();
@@ -418,6 +437,7 @@ function speechResult(event) {
   }
 }
 
+//Speech Display
 let speechBubble = {
   bubbleBox: document.getElementsByClassName("oval-thought")[0],
   bubble: document.getElementById("speechBubble"),

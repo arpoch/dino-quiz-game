@@ -1,9 +1,6 @@
-/* @import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Catamaran:wght@900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Rancho&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Molle:ital@1&display=swap"); */
 body {
   background-color: whitesmoke;
+  margin: 0px;
 }
 #questionBoard {
   display: flex;
@@ -21,18 +18,7 @@ body {
 }
 .stripe-text::after {
   content: "Dino Quiz";
-  background: -webkit-repeating-linear-gradient(
-    135deg,
-    /* silver,silver 20px, slategray 20px, slategray 40px, lightgray 40px, lightgray 60px, dimgray 60px, dimgray 80px); */
-      /* rgb(255, 226, 226),
-    rgb(255, 226, 226) 20px,
-    rgb(255, 249, 192) 20px,
-    rgb(255, 249, 192) 40px,
-    rgb(238, 232, 255) 40px,
-    rgb(238, 232, 255) 60px,
-    rgb(251, 233, 255) 60px,
-    rgb(251, 233, 255) 80px */
-  );
+  background: -webkit-repeating-linear-gradient(135deg);
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-stroke-width: 1.5px;
@@ -76,25 +62,12 @@ body {
   /* margin: 1em auto 80px; */
   text-align: center;
   color: rgb(0, 0, 0);
-  /* background: rgb(204, 4, 4); */
-  /* css3 */
-  /* background: -webkit-gradient(linear, 0 0, 0 100%, from(#2e88c4), to(#075698)); */
-  /* background: -moz-linear-gradient(#2e88c4, #075698);
-  background: -o-linear-gradient(#2e88c4, #075698);*/
   background: linear-gradient(rgb(255, 255, 255), rgb(216, 214, 214));
-  /*linear-gradient(rgb(217, 236, 248), silver);
-  NOTES:
-  -webkit-border-radius:220px 120px; // produces oval in safari 4 and chrome 4
-  -webkit-border-radius:220px / 120px; // produces oval in chrome 4 (again!) but not supported in safari 4
-  Not correct application of the current spec, therefore, using longhand to avoid future problems with webkit corrects this
-  */
   -webkit-border-top-left-radius: 220px 120px;
   -webkit-border-top-right-radius: 220px 120px;
   -webkit-border-bottom-right-radius: 220px 120px;
   -webkit-border-bottom-left-radius: 220px 120px;
   -webkit-border-radius: 220px / 120px;
-  /* -moz-border-radius: 220px / 120px;
-  border-radius: 220px / 120px; */
 }
 
 .oval-thought p {
@@ -161,9 +134,10 @@ body {
   display: inline-block;
   overflow: hidden;
   width: 100%;
-  max-width: 2500px;
+  max-width: 2400px;
   height: 45px;
   top: 220px;
+  left: -1px;
   /* border: 1px solid black; */
 }
 /* #ground {
