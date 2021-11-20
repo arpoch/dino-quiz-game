@@ -9,49 +9,29 @@
         rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
     <!-- Index.css -->
-    <link rel="stylesheet" href="index.css">
-    <title>Dino Quiz Game</title>
+    <link rel="stylesheet" href="index.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dino Quiz</title>
 </head>
 
-<body onload="initGame()">
-    <div id="questionBoard">
+<body class="background" onload="initIndex()">
+    <div id="gametitle">
         <!--style="border: 1px solid blue;"-->
-        <p id="question">
-        </p>
     </div>
-    <div id="correctAnswer">
-        <p></p>
-    </div>
-    <div id="game" class="runner">
-        <!--  style="border: 1px solid blue;"-->
-        <div id="scoreBoard">
-            <span style="position: absolute;top: 0.450em">&#128142;</span>
-            <p class="score"></p>
+    <form name="entry" onsubmit="setsessionStore()" action="game.html">
+        <div id="child">
+            <input type="text" id="name" placeholder="Enter your name" required />
+            <button type="submit" value="Start" id="sub">Start</button>
         </div>
-        <center>
-            <div id="gameStatus">
-                <canvas id="gameOver" width="150" height="30"></canvas>
-                <canvas id="reloadIcon" width="40" height="35"></canvas>
-            </div>
-        </center>
-        <div id="dinoDiv">
-            <canvas class="dino" height="50" width="45">
-            </canvas>
-        </div>
-        <div id="cactusContainer">
 
-        </div>
-        <div id="Dinoground">
-            <canvas id="ground" height=45px width="2000">
-            </canvas>
-        </div>
-    </div>
-    <div class="oval-thought">
-        <p id="speechBubble"></p>
-    </div>
-    <!-- Game.js -->
-    <script type=" application/javascript" src="game.js"></script>
+    </form>
+
 </body>
+
+<script type="application/javascript" src="index.js"></script>
 
 </html>
