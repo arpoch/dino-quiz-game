@@ -2,6 +2,11 @@ const SpeechRecog = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (!SpeechRecog) {
   alert("Not Supported");
 }
+//Session
+function getSessionStore() {
+  let store = window.sessionStorage;
+  return store.getItem("player");
+}
 //Sound
 let soundEffect = {
   hit: new Audio("sounds/hit.mp3"),
@@ -52,7 +57,9 @@ let quizQuestionAnswer = {
     this.index++;
     if (this.index >= this.question.length) {
       this.board.innerText =
-        "Well Done! " + String.fromCodePoint(129321, 129395, 127881);
+        "Well Done! " +
+        getSessionStore() +
+        String.fromCodePoint(129321, 129395, 127881);
       gameStatus.setGameOver = true;
       document.dispatchEvent(gameReloadEvent);
     } else {
