@@ -54,4 +54,4 @@ Unlike the Chrome Dinosaur Game which is controlled using keyboard to perform ac
 
 ## Flowchart
 
-![](images\Flowchart.png)
+![Flowchat](/images/Flowchart.png)
